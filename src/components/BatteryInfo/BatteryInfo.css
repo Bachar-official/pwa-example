@@ -1,0 +1,130 @@
+.battery-info {
+  background: white;
+  border-radius: 15px;
+  padding: 20px;
+  margin-bottom: 15px;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+}
+
+.battery-info h2 {
+  color: #333;
+  margin-bottom: 15px;
+  font-size: 1.3em;
+  border-bottom: 2px solid #f0f0f0;
+  padding-bottom: 10px;
+}
+
+.battery-display {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.battery-icon {
+  position: relative;
+  width: 60px;
+  height: 30px;
+  border: 3px solid #333;
+  border-radius: 5px;
+  background: #f8f9fa;
+  overflow: hidden;
+}
+
+.battery-icon::after {
+  content: '';
+  position: absolute;
+  right: -8px;
+  top: 8px;
+  width: 5px;
+  height: 10px;
+  background: #333;
+  border-radius: 2px;
+}
+
+.battery-level {
+  height: 100%;
+  transition: width 0.3s ease;
+}
+
+.charging-icon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 1.2em;
+  z-index: 1;
+  text-shadow: 0 0 5px rgba(255,255,255,0.8);
+}
+
+.battery-percent {
+  font-size: 1.8em;
+  font-weight: bold;
+  color: #333;
+}
+
+.battery-details {
+  background: #f8f9fa;
+  padding: 15px;
+  border-radius: 10px;
+}
+
+.battery-detail-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.battery-detail-item:last-child {
+  border-bottom: none;
+}
+
+.detail-label {
+  color: #666;
+  font-size: 0.95em;
+}
+
+.detail-value {
+  color: #333;
+  font-weight: 500;
+}
+
+.battery-warning {
+  margin-top: 15px;
+  padding: 10px;
+  background: #ffebee;
+  color: #c62828;
+  border-radius: 8px;
+  text-align: center;
+  font-weight: 500;
+}
+
+.battery-info.loading .battery-loading {
+  text-align: center;
+  padding: 30px;
+  color: #666;
+}
+
+.spinner-small {
+  width: 30px;
+  height: 30px;
+  border: 3px solid #f3f3f3;
+  border-top: 3px solid #4CAF50;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 10px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.not-supported-message {
+  color: #f44336;
+  padding: 15px;
+  background: #ffebee;
+  border-radius: 10px;
+  text-align: center;
+}

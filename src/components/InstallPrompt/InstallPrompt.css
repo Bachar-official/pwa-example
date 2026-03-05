@@ -1,0 +1,64 @@
+.install-prompt {
+  margin-bottom: 15px;
+}
+
+.ios-install {
+  background: white;
+  border-radius: 15px;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+  border: 2px solid #4CAF50;
+}
+
+.install-icon {
+  font-size: 2.5em;
+}
+
+.install-content h3 {
+  color: #333;
+  margin-bottom: 8px;
+  font-size: 1.1em;
+}
+
+.install-content p {
+  color: #666;
+  font-size: 0.95em;
+  line-height: 1.5;
+}
+
+.share-icon {
+  display: inline-block;
+  background: #f0f0f0;
+  padding: 2px 8px;
+  border-radius: 5px;
+  font-weight: bold;
+}
+
+.install-button {
+  background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+  color: white;
+  border: none;
+  padding: 15px 20px;
+  border-radius: 15px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-size: 1.1em;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 5px 20px rgba(76, 175, 80, 0.3);
+}
+
+.install-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(76, 175, 80, 0.4);
+}
+
+.install-button .install-icon {
+  font-size: 1.3em;
+}

@@ -1,0 +1,129 @@
+.motion-component {
+  background: white;
+  border-radius: 15px;
+  padding: 20px;
+  margin-bottom: 15px;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+}
+
+.motion-component h2 {
+  color: #333;
+  margin-bottom: 15px;
+  font-size: 1.3em;
+  border-bottom: 2px solid #f0f0f0;
+  padding-bottom: 10px;
+}
+
+.motion-btn {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 10px;
+  font-size: 1em;
+  cursor: pointer;
+  transition: all 0.2s;
+  width: 100%;
+}
+
+.motion-btn.start {
+  background: #4CAF50;
+  color: white;
+}
+
+.motion-btn.stop {
+  background: #f44336;
+  color: white;
+  margin-top: 15px;
+}
+
+.motion-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+.shake-indicator {
+  text-align: center;
+  padding: 30px;
+  background: #f8f9fa;
+  border-radius: 15px;
+  margin-bottom: 15px;
+  font-size: 1.2em;
+  color: #666;
+  transition: all 0.3s;
+  border: 2px solid transparent;
+}
+
+.shake-indicator.active {
+  background: #4CAF50;
+  color: white;
+  transform: scale(1.02);
+  border-color: #45a049;
+}
+
+.motion-data {
+  display: flex;
+  justify-content: space-around;
+  margin: 20px 0;
+  padding: 15px;
+  background: #f8f9fa;
+  border-radius: 10px;
+}
+
+.data-item {
+  text-align: center;
+}
+
+.data-label {
+  display: block;
+  font-size: 0.9em;
+  color: #666;
+  margin-bottom: 5px;
+}
+
+.data-value {
+  display: block;
+  font-size: 1.3em;
+  font-weight: bold;
+  color: #333;
+}
+
+.motion-hint {
+  margin-top: 15px;
+  color: #999;
+  font-size: 0.9em;
+  text-align: center;
+}
+
+.not-supported {
+  opacity: 0.7;
+}
+
+.not-supported-message {
+  color: #f44336;
+  padding: 15px;
+  background: #ffebee;
+  border-radius: 10px;
+  text-align: center;
+}
+
+@media (max-width: 600px) {
+  .motion-data {
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .data-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 0;
+    border-bottom: 1px solid #dee2e6;
+  }
+  
+  .data-item:last-child {
+    border-bottom: none;
+  }
+  
+  .data-label, .data-value {
+    display: inline-block;
+  }
+}
