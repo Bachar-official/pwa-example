@@ -1,10 +1,8 @@
-import React from 'react';
 import { usePWA } from './hooks/usePWA';
 import Camera from './components/Camera/Camera';
 import Notifications from './components/Notifications/Notifications';
 import Geolocation from './components/Geolocation/Geolocation';
 import MotionDetector from './components/MotionDetector/MotionDetector';
-import Posts from './components/Posts/Posts';
 import FileManager from './components/FileManager/FileManager';
 import BatteryInfo from './components/BatteryInfo/BatteryInfo';
 import ShareButton from './components/ShareButton/ShareButton';
@@ -57,7 +55,7 @@ function App() {
         </div>
         
         <p className="subtitle">
-          Все возможности Progressive Web App
+          Progressive Web App
         </p>
         
         <div className="status-bar">
@@ -105,12 +103,6 @@ function App() {
         />
 
         <BatteryInfo />
-
-        <Posts 
-          saveToCache={saveToCache}
-          loadFromCache={loadFromCache}
-          showNotification={showNotification}
-        />
 
         <FileManager 
           saveToCache={saveToCache}
