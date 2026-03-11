@@ -1,6 +1,6 @@
 {
   "short_name": "PWA Demo",
-  "name": "PWA Demo - Все возможности Progressive Web App",
+  "name": "PWA Demo - возможности Progressive Web App",
   "icons": [
     {
       "src": "icon-192.png",
@@ -21,7 +21,7 @@
   "background_color": "#ffffff",
   "orientation": "portrait",
   "scope": "/",
-  "description": "Демонстрация всех возможностей Progressive Web App для студентов",
+  "description": "Демонстрация возможностей Progressive Web App для студентов",
   "categories": ["education", "demo"],
   "lang": "ru",
   "dir": "ltr",

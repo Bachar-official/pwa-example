@@ -15,31 +15,31 @@ const urlsToCache = [
 
 // Установка Service Worker
 self.addEventListener('install', (event) => {
-  console.log('📦 Service Worker устанавливается...');
+  console.log('Service Worker устанавливается...');
   self.skipWaiting();
   
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then(cache => {
-        console.log('✅ Кэшируем ресурсы...');
+        console.log('Кэшируем ресурсы...');
         return cache.addAll(urlsToCache);
       })
       .catch(error => {
-        console.error('❌ Ошибка кэширования:', error);
+        console.error('Ошибка кэширования:', error);
       })
   );
 });
 
 // Активация и очистка
 self.addEventListener('activate', (event) => {
-  console.log('🚀 Service Worker активирован');
+  console.log('Service Worker активирован');
   
   event.waitUntil(
     caches.keys().then(cacheNames => {
       return Promise.all(
         cacheNames.map(cacheName => {
           if (cacheName !== CACHE_NAME) {
-            console.log('🗑️ Удаляем старый кэш:', cacheName);
+            console.log('Удаляем старый кэш:', cacheName);
             return caches.delete(cacheName);
           }
         })
@@ -52,7 +52,6 @@ self.addEventListener('activate', (event) => {
 
 // Стратегия кэширования
 self.addEventListener('fetch', (event) => {
-  // Пропускаем запросы не GET
   if (event.request.method !== 'GET') return;
 
   // Стратегия: Network First для HTML, Cache First для остального
