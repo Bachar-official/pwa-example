@@ -18,6 +18,15 @@ function Camera({ onPhotoTaken, saveToCache }) {
     };
   }, [stream]);
 
+  useEffect(() => {
+  if (stream && videoRef.current) {
+    videoRef.current.srcObject = stream;
+    videoRef.current.play().catch(e => {
+      console.error('Ошибка воспроизведения:', e);
+    });
+  }
+}, [stream]);
+
   const startCamera = async () => {
     setError(null);
     

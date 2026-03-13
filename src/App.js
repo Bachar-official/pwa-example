@@ -3,11 +3,11 @@ import Camera from './components/Camera/Camera';
 import Notifications from './components/Notifications/Notifications';
 import Geolocation from './components/Geolocation/Geolocation';
 import MotionDetector from './components/MotionDetector/MotionDetector';
-import FileManager from './components/FileManager/FileManager';
 import BatteryInfo from './components/BatteryInfo/BatteryInfo';
 import ShareButton from './components/ShareButton/ShareButton';
 import InstallPrompt from './components/InstallPrompt/InstallPrompt';
 import './App.css';
+import NotesManager from './components/FileManager/NotesManager';
 
 function App() {
   const {
@@ -104,7 +104,7 @@ function App() {
 
         <BatteryInfo />
 
-        <FileManager 
+        <NotesManager 
           saveToCache={saveToCache}
           cacheSize={cacheSize}
           clearCache={clearCache}
