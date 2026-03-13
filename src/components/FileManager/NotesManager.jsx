@@ -14,32 +14,58 @@ function NotesManager({ saveToCache, loadFromCache, clearCache, cacheSize, showN
   const loadNotesFromCache = async () => {
     setIsLoading(true);
     try {
-      // Пытаемся загрузить все заметки из кэша
-      // Предполагаем, что заметки хранятся с префиксом 'note-'
       const cachedNotes = [];
       
-      // Если у вас есть метод для получения всех ключей кэша, используйте его
-      // Или перебираем возможные ID
-      for (let i = 0; i < localStorage.length; i++) {
-        const key = localStorage.key(i);
-        if (key && key.startsWith('note-')) {
-          const noteData = localStorage.getItem(key);
-          if (noteData) {
-            try {
-              const parsed = JSON.parse(noteData);
-              cachedNotes.push({
-                ...parsed,
-                id: key.replace('note-', '')
-              });
-            } catch (e) {
-              console.error('Ошибка парсинга заметки:', e);
+      // Проверяем доступность Cache API
+      if (!('caches' in window)) {
+        console.warn('Cache API не поддерживается');
+        setIsLoading(false);
+        return;
+      }
+
+      const cache = await caches.open('pwa-demo-v1');
+      const keys = await cache.keys();
+      
+      // Фильтруем только ключи заметок (начинаются с 'pwa-cache-note-')
+      const noteKeys = keys.filter(request => {
+        const url = request.url;
+        return url.includes('pwa-cache-note-');
+      });
+
+      console.log('Найдено заметок в кэше:', noteKeys.length);
+
+      for (const request of noteKeys) {
+        try {
+          const response = await cache.match(request);
+          if (response) {
+            const json = await response.json();
+            const noteData = json?.data;
+            
+            if (noteData) {
+              try {
+                const parsed = JSON.parse(noteData);
+                // Извлекаем ID из URL ключа
+                const url = request.url;
+                const idMatch = url.match(/pwa-cache-note-(.+)$/);
+                const id = idMatch ? idMatch[1] : parsed.id;
+                
+                cachedNotes.push({
+                  ...parsed,
+                  id: id
+                });
+              } catch (e) {
+                console.error('Ошибка парсинга заметки:', e);
+              }
             }
           }
+        } catch (e) {
+          console.error('Ошибка чтения заметки из кэша:', e);
         }
       }
       
       // Сортируем по дате создания (новые сверху)
-      cachedNotes.sort((a, b) => b.createdAt - a.createdAt);
+      cachedNotes.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+      console.log('Загружено заметок:', cachedNotes.length);
       setNotes(cachedNotes);
       
     } catch (error) {
@@ -63,16 +89,21 @@ function NotesManager({ saveToCache, loadFromCache, clearCache, cacheSize, showN
       updatedAt: Date.now()
     };
 
-    // Добавляем в состояние
+    // Добавляем в состояние сразу для UI responsiveness
     setNotes(prev => [newNote, ...prev]);
     setNewNoteText('');
 
-    // Сохраняем в кэш
+    // Сохраняем в кэш через пропс saveToCache
     try {
-      await saveToCache?.(`note-${newNote.id}`, JSON.stringify(newNote));
-      showNotification?.('✅ Заметка добавлена', { body: 'Заметка сохранена в кэш' });
+      const success = await saveToCache?.(`note-${newNote.id}`, JSON.stringify(newNote));
+      if (success) {
+        showNotification?.('✅ Заметка добавлена', { body: 'Заметка сохранена в кэш' });
+      } else {
+        console.warn('saveToCache вернул false');
+      }
     } catch (error) {
       console.error('Ошибка сохранения:', error);
+      showNotification?.('❌ Ошибка сохранения', { body: 'Не удалось сохранить заметку' });
     }
   };
 
@@ -80,15 +111,21 @@ function NotesManager({ saveToCache, loadFromCache, clearCache, cacheSize, showN
     // Удаляем из состояния
     setNotes(prev => prev.filter(n => n.id !== noteId));
 
-    // Удаляем из кэша
+    // Удаляем из Cache API напрямую
     try {
-      // Если saveToCache использует localStorage:
-      localStorage.removeItem(`note-${noteId}`);
+      if (!('caches' in window)) return;
       
-      // Или если есть специальный метод удаления:
-      // await removeFromCache?.(`note-${noteId}`);
+      const cache = await caches.open('pwa-demo-v1');
+      const key = `pwa-cache-note-${noteId}`;
       
-      showNotification?.('🗑️ Заметка удалена', { body: 'Заметка удалена из кэша' });
+      // Находим и удаляем по полному URL
+      const keys = await cache.keys();
+      const targetKey = keys.find(req => req.url.includes(key));
+      
+      if (targetKey) {
+        await cache.delete(targetKey);
+        showNotification?.('🗑️ Заметка удалена', { body: 'Заметка удалена из кэша' });
+      }
     } catch (error) {
       console.error('Ошибка удаления:', error);
     }
@@ -97,8 +134,11 @@ function NotesManager({ saveToCache, loadFromCache, clearCache, cacheSize, showN
   const updateNote = async (noteId, newText) => {
     if (!newText.trim()) return;
 
+    const noteToUpdate = notes.find(n => n.id === noteId);
+    if (!noteToUpdate) return;
+
     const updatedNote = {
-      ...notes.find(n => n.id === noteId),
+      ...noteToUpdate,
       text: newText.trim(),
       updatedAt: Date.now()
     };
@@ -106,7 +146,7 @@ function NotesManager({ saveToCache, loadFromCache, clearCache, cacheSize, showN
     // Обновляем в состоянии
     setNotes(prev => prev.map(n => n.id === noteId ? updatedNote : n));
 
-    // Обновляем в кэше
+    // Обновляем в кэше через saveToCache (перезапишет существующую)
     try {
       await saveToCache?.(`note-${noteId}`, JSON.stringify(updatedNote));
       showNotification?.('✏️ Заметка обновлена', { body: 'Изменения сохранены' });
@@ -120,20 +160,28 @@ function NotesManager({ saveToCache, loadFromCache, clearCache, cacheSize, showN
       return;
     }
 
-    // Удаляем все заметки из кэша
-    const noteKeys = notes.map(n => `note-${n.id}`);
-    for (const key of noteKeys) {
-      localStorage.removeItem(key);
-    }
+    try {
+      if (!('caches' in window)) return;
+      
+      const cache = await caches.open('pwa-demo-v1');
+      const keys = await cache.keys();
+      
+      // Удаляем только ключи заметок
+      const noteKeys = keys.filter(req => req.url.includes('pwa-cache-note-'));
+      
+      for (const key of noteKeys) {
+        await cache.delete(key);
+      }
 
-    setNotes([]);
-    
-    if (showNotification) {
-      showNotification('🧹 Заметки очищены', { body: 'Все заметки удалены' });
+      setNotes([]);
+      showNotification?.('🧹 Заметки очищены', { body: 'Все заметки удалены' });
+    } catch (error) {
+      console.error('Ошибка очистки:', error);
     }
   };
 
   const formatDate = (timestamp) => {
+    if (!timestamp) return '—';
     const date = new Date(timestamp);
     return date.toLocaleString('ru-RU', {
       day: '2-digit',
@@ -151,6 +199,12 @@ function NotesManager({ saveToCache, loadFromCache, clearCache, cacheSize, showN
     }
   };
 
+  // Ручное обновление из кэша
+  const handleRefresh = () => {
+    loadNotesFromCache();
+    showNotification?.('🔄 Обновлено', { body: 'Заметки перезагружены из кэша' });
+  };
+
   if (isLoading) {
     return <div className="notes-manager loading">Загрузка заметок...</div>;
   }
@@ -161,6 +215,9 @@ function NotesManager({ saveToCache, loadFromCache, clearCache, cacheSize, showN
         <h2>📝 Заметки</h2>
         <div className="notes-stats">
           <span className="notes-count">Заметок: {notes.length}</span>
+          <button onClick={handleRefresh} className="refresh-btn" title="Обновить из кэша">
+            🔄
+          </button>
           {notes.length > 0 && (
             <button onClick={handleClearAllNotes} className="clear-all-btn">
               🗑️ Очистить все
@@ -212,7 +269,7 @@ function NotesManager({ saveToCache, loadFromCache, clearCache, cacheSize, showN
   );
 }
 
-// Отдельный компонент для одной заметки (с возможностью редактирования)
+// Отдельный компонент для одной заметки
 function NoteItem({ note, onDelete, onUpdate, formatDate }) {
   const [isEditing, setIsEditing] = useState(false);
   const [editText, setEditText] = useState(note.text);
@@ -247,10 +304,12 @@ function NoteItem({ note, onDelete, onUpdate, formatDate }) {
         <>
           <div className="note-content">
             <p className="note-text">{note.text}</p>
-            <span className="note-date">{formatDate(note.createdAt)}</span>
-            {note.updatedAt !== note.createdAt && (
-              <span className="note-edited">(изменено)</span>
-            )}
+            <div className="note-meta">
+              <span className="note-date">{formatDate(note.createdAt)}</span>
+              {note.updatedAt !== note.createdAt && (
+                <span className="note-edited">(изменено {formatDate(note.updatedAt)})</span>
+              )}
+            </div>
           </div>
           <div className="note-actions">
             <button 

@@ -181,6 +181,18 @@ export function usePWA() {
       console.error("Ошибка показа уведомления:", error);
     }
   };
+
+  const getAllCacheKeys = async () => {
+  if (!("caches" in window)) return [];
+  try {
+    const cache = await caches.open(CACHE_NAME);
+    const keys = await cache.keys();
+    return keys.map(k => k.url);
+  } catch (error) {
+    console.error("Ошибка получения ключей:", error);
+    return [];
+  }
+};
   
   return {
 
@@ -194,6 +206,7 @@ export function usePWA() {
     saveToCache,
     loadFromCache,
     clearCache,
+    getAllCacheKeys,
 
     requestNotificationPermission,
     showNotification

@@ -21,7 +21,8 @@ function App() {
     loadFromCache,
     clearCache,
     requestNotificationPermission,
-    showNotification
+    showNotification,
+    getAllCacheKeys,
   } = usePWA();
 
   const handleInstall = async () => {
@@ -109,6 +110,8 @@ function App() {
           cacheSize={cacheSize}
           clearCache={clearCache}
           showNotification={showNotification}
+          loadFromCache={loadFromCache}
+          getAllCacheKeys={getAllCacheKeys}
         />
 
         <section className="info-section">
