@@ -99,9 +99,7 @@ function App() {
           showNotification={showNotification}
         />
 
-        <MotionDetector 
-          showNotification={showNotification}
-        />
+        <MotionDetector />
 
         <BatteryInfo />
 
@@ -113,21 +111,6 @@ function App() {
           loadFromCache={loadFromCache}
           getAllCacheKeys={getAllCacheKeys}
         />
-
-        <section className="info-section">
-          <h2>ℹ️ Информация</h2>
-          <ul className="info-list">
-            <li>✅ Service Worker активен</li>
-            <li>✅ Работает офлайн</li>
-            <li>✅ Кэширование данных</li>
-            <li>✅ Push-уведомления</li>
-            <li>✅ Доступ к камере</li>
-            <li>✅ Геолокация</li>
-            <li>✅ Детектор движения</li>
-            <li>✅ Информация о батарее</li>
-            <li>✅ Загрузка файлов</li>
-          </ul>
-        </section>
       </main>
 
       <footer className="app-footer">

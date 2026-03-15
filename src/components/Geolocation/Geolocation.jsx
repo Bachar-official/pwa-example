@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './Geolocation.css';
 
-function Geolocation({ showNotification }) {
+function Geolocation() {
   const [location, setLocation] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -24,12 +24,6 @@ function Geolocation({ showNotification }) {
           accuracy: position.coords.accuracy
         });
         setLoading(false);
-        
-        if (showNotification) {
-          showNotification('📍 Локация получена', {
-            body: `Точность: ${Math.round(position.coords.accuracy)} метров`
-          });
-        }
       },
       (err) => {
         let errorMessage = 'Ошибка получения геолокации';

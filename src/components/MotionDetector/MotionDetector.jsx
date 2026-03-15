@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './MotionDetector.css';
 
-function MotionDetector({ showNotification }) {
+function MotionDetector() {
   const [isSupported, setIsSupported] = useState(false);
   const [shakeDetected, setShakeDetected] = useState(false);
   const [motionData, setMotionData] = useState({ x: 0, y: 0, z: 0 });
@@ -36,12 +36,6 @@ function MotionDetector({ showNotification }) {
       if (Math.abs(x) > 15 || Math.abs(y) > 15 || Math.abs(z) > 15) {
         setShakeDetected(true);
         
-        if (showNotification) {
-          showNotification('👋 Встряхнуто!', {
-            body: 'Детектор движения сработал'
-          });
-        }
-        
         // Сбрасываем через 2 секунды
         setTimeout(() => setShakeDetected(false), 2000);
       }
@@ -65,7 +59,7 @@ function MotionDetector({ showNotification }) {
     return () => {
       window.removeEventListener('devicemotion', handleMotion);
     };
-  }, [isActive, showNotification]); // Зависимости: isActive и showNotification
+  }, [isActive]);
 
   const startDetection = () => {
     setIsActive(true);
