@@ -1,7 +1,10 @@
 # PWA-example
 
-Простенькое React приложение, демонстрирующее технологию PWA (Progressive Web App).
+**ru**
+Простенькое React приложение, демонстрирующее технологию PWA (Progressive Web App) и созданное в обучающих целях.
 
-# Ссылка
+**en**
+Pretty simple React app which demonstrates PWA (Progressive Web App) in educational purposes.
 
-[Тыц](https://bachar-official.github.io/pwa-example/)
+# Ссылка/Link
+[Click here](https://bachar-official.github.io/pwa-example/)
